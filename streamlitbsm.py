@@ -53,6 +53,7 @@ col1, col2 = st.columns(2)
 col1.metric(label="Call Price", value=f"${call_price:,.3f}")
 col2.metric(label="Put Price", value=f"${put_price:,.3f}")
 
+
 with st.sidebar:
     st.write("### Heatmap Parameters")
     min_vol = st.slider("Min Volatility", 0.00, 1.00, volatility*0.5)
@@ -92,3 +93,32 @@ plt.title('Put Option Prices Heatmap')
 plt.xlabel('Spot Price')
 plt.ylabel('Volatility')
 st.pyplot(plt)
+
+#Calculate the Greeks
+d1 = (np.log(spot_price / strike_price) + (risk_free_rate + volatility**2 / 2) * time_to_expiry) / (volatility * np.sqrt(time_to_expiry))
+d2 = d1 - volatility * np.sqrt(time_to_expiry)
+delta_call = norm.cdf(d1)
+delta_put = norm.cdf(d1)-1
+gamma = norm.cdf(d1) / (spot_price * volatility *np.sqrt(time_to_expiry))
+theta_call = -((spot_price*norm.cdf(d1)*volatility)/2*np.sqrt(time_to_expiry)) - risk_free_rate *strike_price*np.exp(-risk_free_rate*time_to_expiry)*norm.cdf(d2) 
+theta_put = -((spot_price*norm.cdf(d1)*volatility)/2*np.sqrt(time_to_expiry)) + risk_free_rate *strike_price*np.exp(-risk_free_rate*time_to_expiry)*norm.cdf(-d2)
+rho_call = 0.01*strike_price*time_to_expiry* np.exp(-risk_free_rate*time_to_expiry) * norm.cdf(d2)
+rho_put = -0.01*(strike_price*time_to_expiry* np.exp(-risk_free_rate*time_to_expiry) * norm.cdf(-d2))
+vega = 0.01*spot_price*norm.cdf(d1)*np.sqrt(time_to_expiry)
+st.write("### Greeks")
+
+col1, col2 = st.columns(2)
+col1.metric(label="Call Delta", value=f"{delta_call:,.3f}")
+col2.metric(label="Put Delta", value=f"{delta_put:,.3f}")
+
+col1, col2 = st.columns(2)
+col1.metric(label="Gamma", value=f"{gamma:,.3f}")
+col2.metric(label="Vega", value=f"{vega:,.3f}")
+
+col1, col2 = st.columns(2)
+col1.metric(label="Call Theta", value=f"{theta_call:,.3f}")
+col2.metric(label="Put Theta", value=f"{theta_put:,.3f}")
+
+col1, col2 = st.columns(2)
+col1.metric(label="Call Rho", value=f"{rho_call:,.3f}")
+col2.metric(label="Put Rho", value=f"{rho_put:,.3f}")
