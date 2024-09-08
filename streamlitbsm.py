@@ -99,12 +99,12 @@ d1 = (np.log(spot_price / strike_price) + (risk_free_rate + volatility**2 / 2) *
 d2 = d1 - volatility * np.sqrt(time_to_expiry)
 delta_call = norm.cdf(d1)
 delta_put = norm.cdf(d1)-1
-gamma = norm.cdf(d1) / (spot_price * volatility *np.sqrt(time_to_expiry))
-theta_call = -((spot_price*norm.cdf(d1)*volatility)/2*np.sqrt(time_to_expiry)) - risk_free_rate *strike_price*np.exp(-risk_free_rate*time_to_expiry)*norm.cdf(d2) 
-theta_put = -((spot_price*norm.cdf(d1)*volatility)/2*np.sqrt(time_to_expiry)) + risk_free_rate *strike_price*np.exp(-risk_free_rate*time_to_expiry)*norm.cdf(-d2)
+gamma = norm.pdf(d1) / (spot_price * volatility *(np.sqrt(time_to_expiry)))
+theta_call = -((spot_price*norm.pdf(d1)*volatility)/2*np.sqrt(time_to_expiry)) - risk_free_rate *strike_price*np.exp(-risk_free_rate*time_to_expiry)*norm.cdf(d2) 
+theta_put = -((spot_price*norm.pdf(d1)*volatility)/2*np.sqrt(time_to_expiry)) + risk_free_rate *strike_price*np.exp(-risk_free_rate*time_to_expiry)*norm.cdf(-d2)
 rho_call = 0.01*strike_price*time_to_expiry* np.exp(-risk_free_rate*time_to_expiry) * norm.cdf(d2)
 rho_put = -0.01*(strike_price*time_to_expiry* np.exp(-risk_free_rate*time_to_expiry) * norm.cdf(-d2))
-vega = 0.01*spot_price*norm.cdf(d1)*np.sqrt(time_to_expiry)
+vega = 0.01*spot_price*norm.pdf(d1)*np.sqrt(time_to_expiry)
 st.write("### Greeks")
 
 col1, col2 = st.columns(2)
