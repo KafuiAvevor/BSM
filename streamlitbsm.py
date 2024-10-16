@@ -122,3 +122,5 @@ col2.metric(label="Put Theta", value=f"{theta_put:,.3f}")
 col1, col2 = st.columns(2)
 col1.metric(label="Call Rho", value=f"{rho_call:,.3f}")
 col2.metric(label="Put Rho", value=f"{rho_put:,.3f}")
+
+#add binomial model for ameerican option prices, compare to bsm model 
